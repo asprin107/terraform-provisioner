@@ -14,7 +14,7 @@ module "addon" {
   eks_oidc_issuer_url   = module.eks.eks_info.oidc_issuer_url
   eks_oidc_provider_arn = module.eks.eks_info.oidc_provider_arn
 
-  argocd-enabled     = true
+  argocd-enabled = true
 
   aws_load_balancer_controller-enabled      = true
   aws_load_balancer_controller-irsa-enabled = true
@@ -30,6 +30,10 @@ module "addon" {
 
   aws_ebs_csi_driver-enabled      = true
   aws_ebs_csi_driver-irsa-enabled = true
+
+  gha_runner_scale_set_controller-enabled      = true
+  gha_runner_scale_set_controller-irsa-enabled = true
+  gha_config_url                               = var.gha_config_url
 
   depends_on = [module.eks]
 }
