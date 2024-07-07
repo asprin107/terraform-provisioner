@@ -14,3 +14,8 @@ variable "region" {
   description = "AWS region name."
   type        = string
 }
+
+variable "kyverno_irsa_arn" {
+  description = "IRSA arn for kyverno."
+  type        = string
+}
