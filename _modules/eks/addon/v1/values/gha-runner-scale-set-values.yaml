@@ -1,3 +1,3 @@
 githubConfigUrl: ${github_config_url}
-githubConfigSecret: gha-secret
+githubConfigSecret: ${gha_secret_name}
 runnerGroup: ${runner_group}

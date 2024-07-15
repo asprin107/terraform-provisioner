@@ -21,6 +21,7 @@ resource "helm_release" "gha_runner_scale_set" {
 
   values = var.gha_runner_scale_set-values == null ? [templatefile("${path.module}/values/gha-runner-scale-set-values.yaml", {
     github_config_url = var.gha_config_url
+    gha_secret_name   = var.gha_secret_name
     runner_group      = var.gha_runner_group
   })] : var.gha_runner_scale_set-values
 
@@ -78,6 +79,12 @@ variable "gha_config_url" {
   description = "The information of the target GitHub URL for the action runner to connect to."
   type        = string
   default     = ""
+}
+
+variable "gha_secret_name" {
+  description = "Secret name for github action runner auth. it must contain github PAT."
+  type        = string
+  default     = "gha-secret"
 }
 
 variable "gha_runner_group" {

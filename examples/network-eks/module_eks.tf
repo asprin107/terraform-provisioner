@@ -22,8 +22,8 @@ module "addon" {
   cluster_autoscaler-enabled      = true
   cluster_autoscaler-irsa-enabled = true
 
-  kyverno-enabled      = true
-  kyverno-irsa-enabled = true
+  kyverno-enabled      = false
+  kyverno-irsa-enabled = false
 
   external_secrets-enabled      = true
   external_secrets-irsa-enabled = true
@@ -31,9 +31,10 @@ module "addon" {
   aws_ebs_csi_driver-enabled      = true
   aws_ebs_csi_driver-irsa-enabled = true
 
-  gha_runner_scale_set_controller-enabled      = true
-  gha_runner_scale_set_controller-irsa-enabled = true
+  gha_runner_scale_set_controller-enabled      = false
+  gha_runner_scale_set_controller-irsa-enabled = false
   gha_config_url                               = var.gha_config_url
+  gha_secret_name                              = "gha-secret"
 
   depends_on = [module.eks]
 }
