@@ -23,6 +23,7 @@
 | <a name="module_irsa-aws_mountpoint_s3_csi_driver"></a> [irsa-aws\_mountpoint\_s3\_csi\_driver](#module\_irsa-aws\_mountpoint\_s3\_csi\_driver) | ../../../iam/irsa/aws-mountpoint-s3-csi-driver | n/a |
 | <a name="module_irsa-cluster_autoscaler"></a> [irsa-cluster\_autoscaler](#module\_irsa-cluster\_autoscaler) | ../../../iam/irsa/cluster-autoscaler | n/a |
 | <a name="module_irsa-external_secrets"></a> [irsa-external\_secrets](#module\_irsa-external\_secrets) | ../../../iam/irsa/external-secrets | n/a |
+| <a name="module_irsa-gha_runner_scale_set"></a> [irsa-gha\_runner\_scale\_set](#module\_irsa-gha\_runner\_scale\_set) | ../../../iam/irsa/actions-runner | n/a |
 | <a name="module_irsa-kyverno"></a> [irsa-kyverno](#module\_irsa-kyverno) | ../../../iam/irsa/kyverno | n/a |
 | <a name="module_irsa-vpc_cni"></a> [irsa-vpc\_cni](#module\_irsa-vpc\_cni) | ../../../iam/irsa/vpc-cni | n/a |
 
@@ -36,10 +37,13 @@
 | [aws_eks_addon.aws_mountpoint_s3_csi_driver](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) | resource |
 | [aws_eks_addon.vpc_cni](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) | resource |
 | [aws_security_group.argocd](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_security_group.kube_ops_view](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [helm_release.argocd](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.aws_load_balancer_controller](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.cluster_autoscaler](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.external_secrets](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.gha_runner_scale_set](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.gha_runner_scale_set_controller](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.kyverno](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
@@ -53,7 +57,6 @@
 | <a name="input_adot-resolve_conflicts_on_create"></a> [adot-resolve\_conflicts\_on\_create](#input\_adot-resolve\_conflicts\_on\_create) | Defines a workaround if conflict occurs during creation. | `string` | `"OVERWRITE"` | no |
 | <a name="input_adot-resolve_conflicts_on_update"></a> [adot-resolve\_conflicts\_on\_update](#input\_adot-resolve\_conflicts\_on\_update) | Defines a workaround if conflict occurs during the update. | `string` | `"NONE"` | no |
 | <a name="input_adot-version"></a> [adot-version](#input\_adot-version) | Addon version of `AWS Distro for OpenTelemetry`. You can check the available values using awscli. https://docs.aws.amazon.com/cli/latest/reference/eks/describe-addon-versions.html | `string` | `"v0.94.1-eksbuild.1"` | no |
-| <a name="input_argocd-access_type"></a> [argocd-access\_type](#input\_argocd-access\_type) | Defines the type of access for `argocd`. Possible values are `simple` and `custom.` If configured as `simple`, generate ingress as an alb of AWS. If configured as `custom`, it must be configured directly by injecting values file. | `string` | `"simple"` | no |
 | <a name="input_argocd-enabled"></a> [argocd-enabled](#input\_argocd-enabled) | Defines whether `argocd` is installed or not. | `bool` | `true` | no |
 | <a name="input_argocd-namespace"></a> [argocd-namespace](#input\_argocd-namespace) | Defines the namespace to which addon will be deployed. | `string` | `"argocd"` | no |
 | <a name="input_argocd-values"></a> [argocd-values](#input\_argocd-values) | Inject the values file of addon. | `list(string)` | `null` | no |
@@ -96,6 +99,16 @@
 | <a name="input_external_secrets-target_secretsmanager"></a> [external\_secrets-target\_secretsmanager](#input\_external\_secrets-target\_secretsmanager) | Secretmanager arn list that external secrets can access. Default value is "arn:aws:secretsmanager:$\{data.aws\_region.current.name\}:$\{data.aws\_caller\_identity.current.account\_id\}:*" | `list(string)` | `null` | no |
 | <a name="input_external_secrets-values"></a> [external\_secrets-values](#input\_external\_secrets-values) | Inject the values file of addon. | `list(string)` | `null` | no |
 | <a name="input_external_secrets-version"></a> [external\_secrets-version](#input\_external\_secrets-version) | Addon version of `external secrets`. | `string` | `"0.9.19"` | no |
+| <a name="input_gha_config_url"></a> [gha\_config\_url](#input\_gha\_config\_url) | The information of the target GitHub URL for the action runner to connect to. | `string` | `""` | no |
+| <a name="input_gha_runner_group"></a> [gha\_runner\_group](#input\_gha\_runner\_group) | n/a | `string` | `"k8s-self-hosted"` | no |
+| <a name="input_gha_runner_scale_set-values"></a> [gha\_runner\_scale\_set-values](#input\_gha\_runner\_scale\_set-values) | Inject the values file of addon. | `list(string)` | `null` | no |
+| <a name="input_gha_runner_scale_set_controller-enabled"></a> [gha\_runner\_scale\_set\_controller-enabled](#input\_gha\_runner\_scale\_set\_controller-enabled) | Defines whether `actions runner controller` is installed or not. | `bool` | `false` | no |
+| <a name="input_gha_runner_scale_set_controller-irsa-enabled"></a> [gha\_runner\_scale\_set\_controller-irsa-enabled](#input\_gha\_runner\_scale\_set\_controller-irsa-enabled) | Determines whether you want to create a role for addon's irsa. | `bool` | `false` | no |
+| <a name="input_gha_runner_scale_set_controller-namespace"></a> [gha\_runner\_scale\_set\_controller-namespace](#input\_gha\_runner\_scale\_set\_controller-namespace) | Defines the namespace to which addon will be deployed. | `string` | `"arc-runners"` | no |
+| <a name="input_gha_runner_scale_set_controller-values"></a> [gha\_runner\_scale\_set\_controller-values](#input\_gha\_runner\_scale\_set\_controller-values) | Inject the values file of addon. | `list(string)` | `null` | no |
+| <a name="input_gha_runner_scale_set_controller-version"></a> [gha\_runner\_scale\_set\_controller-version](#input\_gha\_runner\_scale\_set\_controller-version) | Addon version of `actions runner controller`. | `string` | `"0.9.3"` | no |
+| <a name="input_gha_secret_name"></a> [gha\_secret\_name](#input\_gha\_secret\_name) | Secret name for github action runner auth. it must contain github PAT. | `string` | `"gha-secret"` | no |
+| <a name="input_kube_ops_view-enabled"></a> [kube\_ops\_view-enabled](#input\_kube\_ops\_view-enabled) | Defines whether `kube-ops-view` is installed or not. | `bool` | `false` | no |
 | <a name="input_kyverno-enabled"></a> [kyverno-enabled](#input\_kyverno-enabled) | Defines whether `kyverno` is installed or not. | `bool` | `false` | no |
 | <a name="input_kyverno-irsa-enabled"></a> [kyverno-irsa-enabled](#input\_kyverno-irsa-enabled) | Determines whether you want to create a role for addon's irsa. | `bool` | `true` | no |
 | <a name="input_kyverno-namespace"></a> [kyverno-namespace](#input\_kyverno-namespace) | Defines the namespace to which addon will be deployed. | `string` | `"kyverno"` | no |
