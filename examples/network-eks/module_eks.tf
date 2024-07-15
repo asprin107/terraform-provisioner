@@ -36,5 +36,7 @@ module "addon" {
   gha_config_url                               = var.gha_config_url
   gha_secret_name                              = "gha-secret"
 
+  kube_ops_view-enabled = true
+
   depends_on = [module.eks]
 }
